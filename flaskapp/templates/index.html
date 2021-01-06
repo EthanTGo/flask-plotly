@@ -4,7 +4,7 @@
 
 <head>
 
-<title>My Data Dashboard</title>
+<title>Ethan Go's Data Dashboard</title>
 
 <!--import script files needed from plotly and bootstrap-->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -33,7 +33,7 @@
         <a class="nav-link" href="https://www.udacity.com">Udacity</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Other Link</a>
+        <a class="nav-link" href="https://github.com/EthanTGo">My Github</a>
       </li>
     </ul>
   </div>
@@ -60,8 +60,8 @@
         <!--chart descriptions-->       
         <div id="middle-info" class="mt-3">
 
-            <h2 id="tag-line">Data Dashboard</h2>
-            <h4 id="tag-line" class="text-muted">Sub-header</h4>
+            <h2 id="tag-line">Ethan Go's Data Dashboard</h2>
+            <h4 id="tag-line" class="text-muted">The following dashboard is my take on the project from Udacity</h4>
             
         </div>
 
@@ -112,7 +112,7 @@
             </div>
 
             <!--bottom two charts-->        
-            <div class="row mb-6">
+            <div class="row">
                 <div class="col-6"> 
                     <div id="chart3">
                         <div id="{{ids[2]}}"></div>
@@ -124,7 +124,15 @@
                     </div>
                 <div>
             </div>
-        
+
+            <!-- last chart-->
+            <div class="row">
+                <div class='col-12'>
+                    <div id="chart5">
+                        <div id="{{ids[4]}}"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     <div>
 </div>
@@ -138,15 +146,35 @@
 <footer>
 
     <script type="text/javascript">
-        // plots the figure with id
-        // id much match the div id above in the html
-        var figures = {{figuresJSON | safe}};
-        var ids = {{ids | safe}};
-        for(var i in figures) {
-            Plotly.plot(ids[i],
-                figures[i].data,
-                figures[i].layout || {});
-        }
+    	// plots the figure by id using Plotly
+    	// id much match the div id above in the html
+    	var figures = {{figuresJSON | safe}};
+		var ids = {{ids | safe}};
+		for(var i in figures) {
+			Plotly.plot(ids[i],
+				figures[i].data,
+				figures[i].layout || {});
+		};
+
+		// checks or unchecks the filter boxes based on the select all box
+        $("#select-all-check").change(function () {
+        	$("#check-boxes input:checkbox").prop('checked', $(this).prop('checked'));
+        });
+
+		// uncheck select-all box when unchecking another box
+		$("#form-filter").change(function () {
+			if (!$(this).prop('checked')) {
+				$("#select-all-check").prop('checked', false);
+			}
+		});
+
+		// check select-all box when re-checking all of the other boxes
+		$("#form-filter").change(function () {
+			if ($(".country-check:checked").length == $('.form-check').length - 1) {
+				$("#select-all-check").prop('checked', true);
+			}
+		});
+
     </script>
     
 </footer>

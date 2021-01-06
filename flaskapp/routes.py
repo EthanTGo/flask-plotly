@@ -10,9 +10,9 @@ from wrangling_scripts.wrangle_data import return_figures
 def index():
 
 	# List of countries for filter
-	country_codes = [['Canada','CAN'],['United States','USA'],['Brazil','BRA'],
-	['France','FRA'],['India','IND'],['Italy','ITA'],['Germany','DEU'],
-	['United Kingdom','GBR'],['China','CHN'],['Japan','JPN']]
+	country_codes = [['Brunei Darussalam','BRN'],['Cambodia','KHM'],['Indonesia','IDN'],
+	['Laos','LAO'],['Malaysia','MYS'],['Myanmar','MMR'],['Phillipines','PHL'],
+	['Singapore','SGP'],['Thailand','THA'],['Vietnam','VNM']]
 
 	# Parse the POST request countries list
 	if (request.method == 'POST') and request.form:

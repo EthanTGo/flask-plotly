@@ -6,11 +6,10 @@ from collections import OrderedDict
 import requests
 
 
-# default list of all countries of interest
-country_default = OrderedDict([('Canada', 'CAN'), ('United States', 'USA'), 
-  ('Brazil', 'BRA'), ('France', 'FRA'), ('India', 'IND'), ('Italy', 'ITA'), 
-  ('Germany', 'DEU'), ('United Kingdom', 'GBR'), ('China', 'CHN'), ('Japan', 'JPN')])
-
+# List of Asean countries
+country_default = OrderedDict([('Brunei Darussalam','BRN'),('Cambodia','KHM'),('Indonesia','IDN'),
+	('Laos','LAO'),('Malaysia','MYS'),('Myanmar','MMR'),('Phillipines','PHL'),
+	('Singapore','SGP'),('Thailand','THA'),('Vietnam','VNM')])
 
 def return_figures(countries=country_default):
   """Creates four plotly visualizations using the World Bank API
@@ -34,7 +33,7 @@ def return_figures(countries=country_default):
   country_filter = ';'.join(country_filter)
 
   # World Bank indicators of interest for pulling data
-  indicators = ['AG.LND.ARBL.HA.PC', 'SP.RUR.TOTL.ZS', 'SP.RUR.TOTL.ZS', 'AG.LND.FRST.ZS']
+  indicators = ['AG.LND.ARBL.HA.PC', 'SP.RUR.TOTL.ZS', 'SP.RUR.TOTL.ZS', 'AG.LND.FRST.ZS','NY.GDP.PCAP.CD']
 
   data_frames = [] # stores the data frames with the indicator data of interest
   urls = [] # url endpoints for the World Bank API
@@ -58,7 +57,7 @@ def return_figures(countries=country_default):
 
     data_frames.append(data)
   
-  # first chart plots arable land from 1990 to 2015 in top 10 economies 
+  # first chart plots arable land from 1990 to 2015 in ASEAN countries 
   # as a line chart
   graph_one = []
   df_one = pd.DataFrame(data_frames[0])
@@ -172,7 +171,28 @@ def return_figures(countries=country_default):
                 xaxis = dict(title = '% Population that is Rural', range=[0,100], dtick=10),
                 yaxis = dict(title = '% of Area that is Forested', range=[0,100], dtick=10),
                 )
-
+    
+  graph_five = []
+  df_five = pd.DataFrame(data_frames[4])
+  df_five = df_five[(df_five['date'] == '2015') | (df_five['date'] == '1990')]
+  df_five.sort_values('value', ascending=False, inplace=True)
+  
+  for country in countrylist:
+      x_val = df_five[df_five['country'] == country].date.tolist()
+      y_val = df_five[df_five['country'] == country].value.tolist()
+      graph_five.append(
+          go.Scatter(
+              x = x_val,
+              y = y_val,
+              mode = 'lines',
+              name = country
+              )
+            )
+  layout_five = dict(title = 'Change in GDP per Capita <br> (GDP / Total Population)',
+    xaxis = dict(title = 'Year',
+    autotick=False, tick0=1990, dtick=25),
+    yaxis = dict(title = 'GDP per Capita'),
+    )
 
   # append all charts
   figures = []
@@ -180,5 +200,6 @@ def return_figures(countries=country_default):
   figures.append(dict(data=graph_two, layout=layout_two))
   figures.append(dict(data=graph_three, layout=layout_three))
   figures.append(dict(data=graph_four, layout=layout_four))
+  figures.append(dict(data=graph_five, layout=layout_five))
 
   return figures
